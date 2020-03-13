@@ -16,7 +16,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Stream;
 
 
 @Api( description="API pour es opérations CRUD sur les produits.")
@@ -45,6 +46,25 @@ public class ProductController {
         produitsFiltres.setFilters(listDeNosFiltres);
 
         return produitsFiltres;
+    }
+
+    //Récupérer la marge
+    @ApiOperation(value = "calcule la marge de chaque produit (différence entre prix d‘achat et prix de vente")
+    @GetMapping(value = "/AdminProduits")
+    public   HashMap<Product,Integer>  calculeMarge ()
+    {
+        HashMap<Product,Integer> tabMarge=new HashMap<Product,Integer>();
+        List<Product> produits = productDao.findAll();
+
+       ListIterator<Product> it=produits.listIterator();
+        while (it.hasNext())
+        {
+            Product str=it.next();
+            tabMarge.put(str,str.getPrix()-str.getPrixAchat());
+
+        }
+
+        return tabMarge;
     }
 
 
